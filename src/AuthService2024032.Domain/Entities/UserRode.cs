@@ -4,7 +4,7 @@ namespace AuthService2024032.Domain.Entities;
 
 public  class UserRole
 {
-    [key]
+    [Key]
     [MaxLength(16)]
     public string Id { get; set;} = string.Empty;
 
@@ -17,7 +17,7 @@ public  class UserRole
     [Required]
     [MaxLength(16)]
     public string RoleId {get; set;} = string.Empty;
-    
+
     [Required]
     public User User {get; set;} = null!;
 

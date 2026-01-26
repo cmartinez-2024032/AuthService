@@ -1,0 +1,17 @@
+namespace AuthService2024032.Application.DTOs;
+
+public class UserResponseDto
+{
+    public string Id {get; set;} = string.Empty;
+    public string Name {get; set;} = string.Empty;
+    public string Surname {get; set;} = string.Empty;
+    public string Email {get; set;} = string.Empty;
+    public string SPRofilePicture {get; set;} = string.Empty;
+
+    public string Phone {get; set;} = string.Empty;
+    public string Role {get; set;} = string.Empty;
+    public bool Status {get; set;}
+    public bool IsEmailVerified {get; set;}
+    public DateTime CreatedAt {get; set;}
+    public DateTime UpdateAt {get; set;}
+    }
