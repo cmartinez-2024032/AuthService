@@ -14,7 +14,7 @@ public class UserPasswordReset
     [MaxLength(256)]
     public string? UserPasswordResetToken {get; set;}
 
-    public DateTime? PasswordResetTokenExpiry { get; set;}
+    public DateTime? PasswordResetToken { get; set;}
 
     [Required]
     public User User {get; set;} = null!;
