@@ -40,12 +40,12 @@ public class User
 
     public DateTime UpdatedAt {get; set;}
 
-    public UserProfile userProfile {get; set;} = null!;
+    public UserProfile UserProfile {get; set;} = null!;
 
-    public ICollection<UserRole> userRoles { get; set;} = [];
+    public ICollection<UserRole> UserRoles { get; set;} = [];
 
-    public UserEmail userEmail { get; set;} = null!;
+    public UserEmail UserEmail { get; set;} = null!;
 
-    public UserPasswordReset userPasswordReset {get; set;} = null!;
+    public UserPasswordReset UserPasswordReset {get; set;} = null!;
 }
 

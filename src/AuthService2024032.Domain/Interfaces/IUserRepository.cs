@@ -1,6 +1,6 @@
 using AuthService2024032.Domain.Entities;
 
-namespace AuthService2024032.Domain.Entities;
+namespace AuthService2024032.Domain.Interfaces;
 public interface IUserRepository
 {
     Task<User> CreateAsync(User user);

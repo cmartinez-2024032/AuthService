@@ -2,9 +2,8 @@ using AuthService2024032.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
-namespace AuthService2024003.Persistence.Data;
+namespace AuthService2024032.Persistence.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
@@ -62,8 +61,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id)
-                   .HasMaxLength(16)
-                   .ValueGeneratedNever();
+                .HasMaxLength(16)
+                .ValueGeneratedNever();
             entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(25);
@@ -84,22 +83,22 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(e => e.UpdatedAt)
                     .IsRequired();
             entity.HasIndex(e => e.Username)
-                  .IsUnique();
+                    .IsUnique();
             entity.HasIndex(e => e.Email)
                     .IsUnique();
 
             //Relación de uno a uno y de uno a muchos
-            entity.HasOne(e => e.userProfile)
+            entity.HasOne(e => e.UserProfile)
                   .WithOne(up => up.User)
                   .HasForeignKey<UserProfile>(up => up.UserId);
-            entity.HasMany(e => e.userRoles)
+            entity.HasMany(e => e.UserRoles)
                   .WithOne(ur => ur.User)
                   .HasForeignKey(ur => ur.UserId);
             //Un unico correo electronico
-            entity.HasOne(e => e.userEmail)
+            entity.HasOne(e => e.UserEmail)
                     .WithOne(ue => ue.User)
                     .HasForeignKey<UserEmail>(ue => ue.UserId);
-            entity.HasOne(e => e.userPasswordReset)
+            entity.HasOne(e => e.UserPasswordReset)
                     .WithOne(upr => upr.User)
                     .HasForeignKey<UserPasswordReset>(upr => upr.UserId);
 
@@ -122,7 +121,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(e => e.UpdatedAt)
                 .IsRequired();
             entity.HasOne(ur => ur.User)
-                .WithMany(u => u.userRoles)
+                .WithMany(u => u.UserRoles)
                 .HasForeignKey(ur => ur.UserId);
             entity.HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
@@ -172,28 +171,28 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         var entries = ChangeTracker.Entries()
             .Where(e => (e.Entity is User || e.Entity is Role || e.Entity is UserRole)
                         && (e.State == EntityState.Added || e.State == EntityState.Modified));
- 
+
         foreach (var entry in entries)
         {
-            if(entry.Entity is User user)
+            if (entry.Entity is User user)
             {
-                if(entry.State == EntityState.Added)
+                if (entry.State == EntityState.Added)
                 {
                     user.CreatedAt = DateTime.UtcNow;
                 }
                 user.UpdatedAt = DateTime.UtcNow;
             }
-            else if(entry.Entity is Role role)
+            else if (entry.Entity is Role role)
             {
-                if(entry.State == EntityState.Added)
+                if (entry.State == EntityState.Added)
                 {
                     role.CreatedAt = DateTime.UtcNow;
                 }
                 role.UpdatedAt = DateTime.UtcNow;
             }
-            else if(entry.Entity is UserRole userRole)
+            else if (entry.Entity is UserRole userRole)
             {
-                if(entry.State == EntityState.Added)
+                if (entry.State == EntityState.Added)
                 {
                     userRole.CreateAt = DateTime.UtcNow;
                 }
@@ -201,9 +200,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         }
     }
-    private static string ToSnakeCase (string input)
+    private static string ToSnakeCase(string input)
     {
-        if(string.IsNullOrEmpty(input))
+        if (string.IsNullOrEmpty(input))
             return input;
 
         return string.Concat(input.Select((c, i) => i > 0 && char.IsUpper(c) ? "_" + c : c.ToString())).ToLower();
