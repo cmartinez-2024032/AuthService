@@ -13,3 +13,4 @@ C:\Users\Informatica\Desktop\AuthService2024032\src\AuthService2024032.Applicati
 C:\Users\Informatica\Desktop\AuthService2024032\src\AuthService2024032.Application\obj\Debug\net8.0\refint\AuthService2024032.Application.dll
 C:\Users\Informatica\Desktop\AuthService2024032\src\AuthService2024032.Application\obj\Debug\net8.0\AuthService2024032.Application.pdb
 C:\Users\Informatica\Desktop\AuthService2024032\src\AuthService2024032.Application\obj\Debug\net8.0\ref\AuthService2024032.Application.dll
+C:\Users\Informatica\Desktop\AuthService2024032\src\AuthService2024032.Application\obj\Debug\net8.0\AuthService2024032.Application.sourcelink.json

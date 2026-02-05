@@ -3,9 +3,7 @@ using AuthService2024032.Domain.Entities;
 using AuthService2024032.Domain.Interfaces;
 using AuthService2024032.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
- 
-namespace AuthService2024003.Persistence.Repositories;
- 
+namespace AuthService2024032.Persistence.Repositories;
 public class UserRepository(ApplicationDbContext context) : IUserRepository
 {
     public async Task<User> GetByIdAsyn(string id)
@@ -144,4 +142,4 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
     {
         throw new NotImplementedException();
     }
-}+
+}

@@ -1,5 +1,5 @@
 using AuthService2024032.Domain.Entities;
-using AuthService2024032.Domain.Interfaces;
+using AuthService2024032.Domain.Interface;
 using AuthService2024032.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
  
@@ -42,6 +42,11 @@ public class RoleRepository(ApplicationDbContext context) : IRoleRepository
             .Select(ur => ur.Role.Name)
             .ToListAsync();
         return roles;
+    }
+
+    public Task<IReadOnlyList<string>> GetUserRoleNAmesAsync(string userId)
+    {
+        throw new NotImplementedException();
     }
 }
  

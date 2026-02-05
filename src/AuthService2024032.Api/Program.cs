@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.host.UseSerilog((context, services, loggerConfiguration) =>
+builder.Host.UseSerilog((context, services, loggerConfiguration) =>
     loggerConfiguration
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Servoces(services));
@@ -72,7 +72,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHelthChecks("/health");
+app.MapHealthChecks("/health");
 app.MapGet("/health", () =>
 {
     var response = new
@@ -80,7 +80,7 @@ app.MapGet("/health", () =>
         status = "Healthy",
         timestamps = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
     };
-    return Result.ok(response);
+    return Result.Ok(response);
 });
 
 // Startup log: addresses and health endpoint
