@@ -9,5 +9,5 @@ public class ErrorResponse
     public string Detial {get; set;} = string.Empty;
     public string? ErrorCode {get; set;}
     public string TraceId {get; set;} = Activity.Current?.Id ?? string.Empty;
-    public DateTime Timestamps {get; set;} = DateTime.UtcNow;
+    public DateTime Timestamp {get; set;} = DateTime.UtcNow;
 }

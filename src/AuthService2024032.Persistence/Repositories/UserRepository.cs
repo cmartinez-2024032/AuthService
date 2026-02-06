@@ -1,6 +1,6 @@
 using AuthService2024032.Application.Services;
 using AuthService2024032.Domain.Entities;
-using AuthService2024032.Domain.Interfaces;
+using AuthService2024032.Domain.interfaces;
 using AuthService2024032.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 namespace AuthService2024032.Persistence.Repositories;

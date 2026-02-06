@@ -1,5 +1,5 @@
 using AuthService2024032.Domain.Entities;
-namespace AuthService2024032.Domain.Interface;
+namespace AuthService2024032.Domain.interfaces;
 
 public interface IRoleRepository
 {

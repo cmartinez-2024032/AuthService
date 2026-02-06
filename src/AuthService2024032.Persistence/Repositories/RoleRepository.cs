@@ -1,9 +1,9 @@
 using AuthService2024032.Domain.Entities;
-using AuthService2024032.Domain.Interface;
+using AuthService2024032.Domain.interfaces;
 using AuthService2024032.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
  
-namespace AuthServiceIN6BV.Persistence.Repositories;
+namespace AuthService2024032.Persistence.Repositories;
  
 public class RoleRepository(ApplicationDbContext context) : IRoleRepository
 {

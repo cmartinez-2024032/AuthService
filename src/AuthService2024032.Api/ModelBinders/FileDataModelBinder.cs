@@ -1,6 +1,6 @@
 using AuthService2024032.Api.Models;
-using AuthService2024032.Application.Interface;
-using Microsoft.AspNetCore.Mva.ModelBinding;
+using AuthService2024032.Application.interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AuthService2024032.Api.ModelBinders;
 
@@ -10,7 +10,8 @@ public class FileDataModelBinder : IModelBinder
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        if (!typeof(IFileData).IsAssingnableFrom(bindingContext.ModelType))
+        if (!typeof(IFileData).IsAssignableFrom(bindingContext.ModelType))
+
         {
             return Task.CompletedTask;
         }
@@ -35,14 +36,17 @@ public class FileDataModelBinder : IModelBinder
 
 
 public class FileDataModelBinderProvider : IModelBinderProvider
-{
-    public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
-        if (typeof(IFileData).IsAssignableFrom(context.Metadata.ModelType))
+        public IModelBinder? GetBinder(ModelBinderProviderContext context)
         {
-            return new FileDataModelBinder();
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
+            // Comprueba si el tipo de modelo implementa IFileData
+            if (typeof(IFileData).IsAssignableFrom(context.Metadata.ModelType))
+            {
+                return new FileDataModelBinder();
+            }
+
+            return null;
         }
-        return null;
-    }
 }

@@ -1,4 +1,4 @@
-namespace AuthService2024003.Application.Extensions;
+namespace AuthService2024032.Application.Exceptions;
 
 public class BusinessException : Exception
 {

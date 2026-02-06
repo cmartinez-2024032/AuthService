@@ -1,18 +1,18 @@
-using AuthService2024032.Application.Interface;
-
+using AuthService2024032.Application.interfaces;
+using Microsoft.AspNetCore.Http;
 namespace AuthService2024032.Api.Models;
-
+ 
 public class FormFileAdapter : IFileData
 {
-    private readonly IFormFile _formFile;
+    private readonly IFormFile _formfile;
     private byte[]? _data;
-
-    public FormFileAdapter(IFormFile formFile)
+ 
+    public FormFileAdapter(IFormFile formfile)
     {
-        ArgumentNullException.ThrowIfNull(formFile);
-        _formFile = formFile;
+        ArgumentNullException.ThrowIfNull(formfile);
+        _formfile = formfile;
     }
-
+ 
     public byte[] Data
     {
         get
@@ -20,16 +20,16 @@ public class FormFileAdapter : IFileData
             if(_data == null)
             {
                 using var memoryStream = new MemoryStream();
-                _formFile.CopyTo(memoryStream);
+                _formfile.CopyTo(memoryStream);
                 _data = memoryStream.ToArray();
             }
-            return _data;
+            return Data;
         }
     }
-
-
-    public string ContentType => _formFile.ContentType;
-    public string FileName => _formFile.FileName;
-    public long Size => _formFile.Length;
+ 
+    public string ContentType => _formfile.ContentType;
+    public string FileName => _formfile.FileName;
+    public long Size => _formfile.Length;
+   
 }
-
+ 

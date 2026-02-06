@@ -1,28 +1,35 @@
 using AuthService2024032.Persistence.Data;
 using AuthService2024032.Api.Extensions;
+using AuthService2024032.Api.Middlewares;
 using AuthService2024032.Api.ModelBinders;
 using Serilog;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
-
+using System.Runtime.Serialization;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, services, loggerConfiguration) =>
+builder.Host.UseSerilog((hostBuilderContext, services, loggerConfiguration) =>
+{
     loggerConfiguration
-        .ReadFrom.Configuration(context.Configuration)
-        .ReadFrom.Servoces(services));
+        .ReadFrom.Configuration(hostBuilderContext.Configuration)
+        .ReadFrom.Services(services);
+});
 
 builder.Services.AddControllers(options =>
 {
-    options.ModelBinderProvider.Insert(0, new FileDataModelBinderProvider());
+    options.ModelBinderProviders.Insert(0, new FileDataModelBinderProvider());
 })
-.addJsonOptions(o =>
+.AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
 });
 
-builder.Services.AddApplicationServices(builder.configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddApiDocumentation();
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddRateLimitingPolicies();
 
 
 var app = builder.Build();
@@ -36,7 +43,7 @@ if (app.Environment.IsDevelopment())
 
 // Add Serilog request logging
 app.UseSerilogRequestLogging();
- 
+
 // Add Security Headers using NetEscapades package
 app.UseSecurityHeaders(policies => policies
     .AddDefaultSecurityHeaders()
@@ -61,28 +68,9 @@ app.UseSecurityHeaders(policies => policies
     .AddCustomHeader("Cache-Control", "no-store, no-cache, must-revalidate, private")
 );
 
-//Global  exception handLing
 
-// Core MiddLwares
-app.UserHttpsRedirection();
-app.UseCors("DefaultCorsPolicy");
-app.UseRateLimiter();
-app.Use.Authentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.MapHealthChecks("/health");
-app.MapGet("/health", () =>
-{
-    var response = new
-    {
-        status = "Healthy",
-        timestamps = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-    };
-    return Result.Ok(response);
-});
-
+//Global exception handling
+app.UseMiddleware<GlobalExceptionMiddleware>();
 // Startup log: addresses and health endpoint
 var startupLogger = app.Services.GetRequiredService<ILogger<Program>>();
 app.Lifetime.ApplicationStarted.Register(() =>
@@ -92,7 +80,7 @@ app.Lifetime.ApplicationStarted.Register(() =>
         var server = app.Services.GetRequiredService<IServer>();
         var addressesFeature = server.Features.Get<IServerAddressesFeature>();
         var addresses = (IEnumerable<string>?)addressesFeature?.Addresses ?? app.Urls;
- 
+
         if (addresses != null && addresses.Any())
         {
             foreach (var addr in addresses)
@@ -111,23 +99,44 @@ app.Lifetime.ApplicationStarted.Register(() =>
         startupLogger.LogWarning(ex, "Failed to determine the listening addresses for startup log");
     }
 });
- 
+
+// Core middlewares
+app.UseHttpsRedirection();
+app.UseCors("DefaultCorsPolicy");
+app.UseRateLimiter();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.MapHealthChecks("/health");
+
+app.MapGet("/health", () =>
+{
+    var response = new
+    {
+        status = "Healthy",
+        timestamps = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+    };
+    return Results.Ok(response);
+});
+
 // Initialize database and seed data
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
- 
+
     try
     {
         logger.LogInformation("Checking database connection...");
- 
+
         // Ensure database is created (similar to Sequelize sync in Node.js)
         await context.Database.EnsureCreatedAsync();
- 
+
         logger.LogInformation("Database ready. Running seed data...");
         await DataSeeder.SeedAsync(context);
- 
+
         logger.LogInformation("Database initialization completed successfully");
     }
     catch (Exception ex)
@@ -136,36 +145,6 @@ using (var scope = app.Services.CreateScope())
         throw; // Re-throw to stop the application
     }
 }
- 
-// Initialize database and seed data
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
- 
-    try
-    {
-        logger.LogInformation("Checking database connection...");
- 
-        // Ensure database is created (similar to Sequelize sync in Node.js)
-        await context.Database.EnsureCreatedAsync();
- 
-        logger.LogInformation("Database ready. Running seed data...");
-        await DataSeeder.SeedAsync(context);
- 
-        logger.LogInformation("Database initialization completed successfully");
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "An error occurred while initializing the database");
-        throw; // Re-throw to stop the application
-    }
-}
- 
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -3,7 +3,6 @@ using AuthService2024032.Application.Services;
 using AuthService2024032.Domain.Constants;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
-using AuthService2024010.Application.Services;
 namespace AuthService2024032.Persistence.Data;
 
 public static class DataSeeder

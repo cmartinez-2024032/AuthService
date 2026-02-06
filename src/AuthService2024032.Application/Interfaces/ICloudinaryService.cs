@@ -1,3 +1,5 @@
+using AuthService2024032.Application.interfaces;
+
 namespace AuthService2024032.Application.interfaces;
 
 public interface ICloudinaryService
